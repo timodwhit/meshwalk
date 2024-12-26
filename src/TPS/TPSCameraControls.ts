@@ -62,13 +62,14 @@ export class TPSCameraControls extends CameraControls {
 
 		// this._trackObject = trackObject;
 		// this.offset = new Vector3( 0, 1, 0 );
-		const offset = new Vector3( 0, 2, 0 );
+		//JCG expose offset of camera
+		this.offset = new Vector3( 0, 1, 0 );
 
 		this.update = ( delta ) => {
 
-			const x = trackObject.position.x + offset.x;
-			const y = trackObject.position.y + offset.y;
-			const z = trackObject.position.z + offset.z;
+			const x = trackObject.position.x + this.offset.x;
+			const y = trackObject.position.y + this.offset.y;
+			const z = trackObject.position.z + this.offset.z;
 			this.moveTo( x, y, z, false );
 			return super.update( delta );
 
