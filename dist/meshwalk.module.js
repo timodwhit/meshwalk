@@ -4,9 +4,9 @@
  * (c) 2017 @yomotsu
  * Released under the MIT License.
  */
-import { Vector3, Triangle, Sphere, Line3, Plane, Box3, Mesh, Vector2, MathUtils, AnimationMixer, Ray, Matrix4, Vector4, Quaternion, Spherical, Raycaster, Object3D } from 'three';
+import { Vector3, Triangle, Sphere, Box3, Mesh, Vector2, MathUtils, AnimationMixer, Ray, Matrix4, Vector4, Quaternion, Spherical, Raycaster, Object3D } from 'three';
 
-const vec3$1 = new Vector3();
+const vec3$2 = new Vector3();
 class ComputedTriangle extends Triangle {
     constructor(a, b, c) {
         super(a, b, c);
@@ -25,7 +25,7 @@ class ComputedTriangle extends Triangle {
     // 	this.boundingSphere = undefined;
     // }
     extend(amount) {
-        const incenter = getIncenter(this, vec3$1);
+        const incenter = getIncenter(this, vec3$2);
         const a = incenter.distanceTo(this.a);
         const b = incenter.distanceTo(this.b);
         const c = incenter.distanceTo(this.c);
@@ -116,25 +116,9 @@ function makeTriangleBoundingSphere(triangle, normal) {
     return bs;
 }
 
-const vec3 = new Vector3();
-const vec3_0 = new Vector3();
-const vec3_1 = new Vector3();
-new Sphere();
-new Line3();
-class Intersection {
-    constructor() {
-        this.point = new Vector3();
-        this.normal = new Vector3();
-        this.depth = 0;
-    }
-    set(point, normal, depth) {
-        this.point.copy(point);
-        this.normal.copy(normal);
-        this.depth = depth;
-    }
-}
+const vec3$1 = new Vector3();
 // https://3dkingdoms.com/weekly/weekly.php?a=3
-function isIntersectionLineBox(line, box, hit) {
+function intersectsLineBox(line, box, hit) {
     if (line.end.x < box.min.x && line.start.x < box.min.x)
         return false;
     if (line.end.x > box.max.x && line.start.x > box.max.x)
@@ -153,7 +137,7 @@ function isIntersectionLineBox(line, box, hit) {
         hit && hit.copy(line.start);
         return true;
     }
-    const _hit = vec3;
+    const _hit = vec3$1;
     if ((getIntersection(line.start.x - box.min.x, line.end.x - box.min.x, line.start, line.end, _hit) && inBox(_hit, box, 1)) ||
         (getIntersection(line.start.y - box.min.y, line.end.y - box.min.y, line.start, line.end, _hit) && inBox(_hit, box, 2)) ||
         (getIntersection(line.start.z - box.min.z, line.end.z - box.min.z, line.start, line.end, _hit) && inBox(_hit, box, 3)) ||
@@ -171,9 +155,9 @@ function getIntersection(dst1, dst2, p1, p2, hit) {
     if (dst1 == dst2)
         return false;
     if (hit) {
-        vec3.subVectors(p2, p1);
-        vec3.multiplyScalar(-dst1 / (dst2 - dst1));
-        hit.addVectors(p1, vec3);
+        vec3$1.subVectors(p2, p1);
+        vec3$1.multiplyScalar(-dst1 / (dst2 - dst1));
+        hit.addVectors(p1, vec3$1);
     }
     return true;
 }
@@ -186,95 +170,8 @@ function inBox(hit, box, axis) {
         return true;
     return false;
 }
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Plane();
-const A = new Vector3();
-const B = new Vector3();
-const C = new Vector3();
-const V = new Vector3();
-const AB = new Vector3();
-const BC = new Vector3();
-const CA = new Vector3();
-const Q1 = new Vector3();
-const Q2 = new Vector3();
-const Q3 = new Vector3();
-const QC = new Vector3();
-const QA = new Vector3();
-const QB = new Vector3();
-const negatedNormal = new Vector3();
-// sphere: <THREE.Sphere>
-// a: <THREE.Vector3>, // vertex of a triangle
-// b: <THREE.Vector3>, // vertex of a triangle
-// c: <THREE.Vector3>, // vertex of a triangle
-// normal: <THREE.Vector3>, // normal of a triangle
-function isIntersectionSphereTriangle(sphere, a, b, c, normal, out) {
-    // http://realtimecollisiondetection.net/blog/?p=103
-    // vs plain of triangle face
-    A.subVectors(a, sphere.center);
-    B.subVectors(b, sphere.center);
-    C.subVectors(c, sphere.center);
-    const rr = sphere.radius * sphere.radius;
-    V.crossVectors(vec3_0.subVectors(B, A), vec3_1.subVectors(C, A));
-    const d = A.dot(V);
-    const e = V.dot(V);
-    if (d * d > rr * e) {
-        return false;
-    }
-    // vs triangle vertex
-    const aa = A.dot(A);
-    const ab = A.dot(B);
-    const ac = A.dot(C);
-    const bb = B.dot(B);
-    const bc = B.dot(C);
-    const cc = C.dot(C);
-    if ((aa > rr) && (ab > aa) && (ac > aa) ||
-        (bb > rr) && (ab > bb) && (bc > bb) ||
-        (cc > rr) && (ac > cc) && (bc > cc)) {
-        return false;
-    }
-    // vs edge
-    AB.subVectors(B, A);
-    BC.subVectors(C, B);
-    CA.subVectors(A, C);
-    const d1 = ab - aa;
-    const d2 = bc - bb;
-    const d3 = ac - cc;
-    const e1 = AB.dot(AB);
-    const e2 = BC.dot(BC);
-    const e3 = CA.dot(CA);
-    Q1.subVectors(A.multiplyScalar(e1), AB.multiplyScalar(d1));
-    Q2.subVectors(B.multiplyScalar(e2), BC.multiplyScalar(d2));
-    Q3.subVectors(C.multiplyScalar(e3), CA.multiplyScalar(d3));
-    QC.subVectors(C.multiplyScalar(e1), Q1);
-    QA.subVectors(A.multiplyScalar(e2), Q2);
-    QB.subVectors(B.multiplyScalar(e3), Q3);
-    if ((Q1.dot(Q1) > rr * e1 * e1) && (Q1.dot(QC) >= 0) ||
-        (Q2.dot(Q2) > rr * e2 * e2) && (Q2.dot(QA) >= 0) ||
-        (Q3.dot(Q3) > rr * e3 * e3) && (Q3.dot(QB) >= 0)) {
-        return false;
-    }
-    const distance = Math.sqrt(d * d / e) - sphere.radius - 1;
-    negatedNormal.set(-normal.x, -normal.y, -normal.z);
-    const contactPoint = sphere.center.clone().add(negatedNormal.multiplyScalar(distance));
-    out.set(contactPoint, normal, distance);
-    return true;
-}
+
+const vec3 = new Vector3();
 // // based on Real-Time Collision Detection Section 5.3.4
 // // p: <THREE.Vector3>, // line3.start
 // // q: <THREE.Vector3>, // line3.end
@@ -288,7 +185,7 @@ function isIntersectionSphereTriangle(sphere, a, b, c, normal, out) {
 // const au = new Vector3();
 // const bv = new Vector3();
 // const cw = new Vector3();
-// export function testLineTriangle( p: Vector3, q: Vector3, a: Vector3, b: Vector3, c: Vector3, hit: Vector3 ) {
+// export function intersectsLineTriangle( p: Vector3, q: Vector3, a: Vector3, b: Vector3, c: Vector3, hit: Vector3 ) {
 // 	pq.subVectors( q, p );
 // 	pa.subVectors( a, p );
 // 	pb.subVectors( b, p );
@@ -329,7 +226,7 @@ const e = new Vector3();
 const au = new Vector3();
 const bv = new Vector3();
 const cw = new Vector3();
-function testLineTriangle(p, q, a, b, c, hit) {
+function intersectsLineTriangle(p, q, a, b, c, hit) {
     ab.subVectors(b, a);
     ac.subVectors(c, a);
     qp.subVectors(p, q);
@@ -361,23 +258,6 @@ function testLineTriangle(p, q, a, b, c, hit) {
     hit.copy(au).add(bv).add(cw);
     return true;
 }
-//
-// based on https://github.com/mrdoob/three.js/blob/master/examples/jsm/math/Octree.js
-// https://wickedengine.net/2020/04/26/capsule-collision-detection/
-// we select the closest point on the capsule line to the triangle,
-// place a sphere on that point and then perform the sphere – triangle test.
-// also
-// 5.1.10
-new Vector3();
-new Plane();
-new Line3();
-new Line3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
 
 const _v1 = new Vector3();
 const _v2$1 = new Vector3();
@@ -450,7 +330,7 @@ class Octree {
     getLineTriangles(line, result) {
         for (let i = 0; i < this.subTrees.length; i++) {
             const subTree = this.subTrees[i];
-            if (!isIntersectionLineBox(line, subTree.box))
+            if (!intersectsLineBox(line, subTree.box))
                 continue;
             if (subTree.triangles.length > 0) {
                 for (let j = 0; j < subTree.triangles.length; j++) {
@@ -522,7 +402,7 @@ class Octree {
         this.getLineTriangles(line, triangles);
         for (let i = 0; i < triangles.length; i++) {
             const result = _v1;
-            const isIntersected = testLineTriangle(line.start, line.end, triangles[i].a, triangles[i].b, triangles[i].c, result);
+            const isIntersected = intersectsLineTriangle(line.start, line.end, triangles[i].a, triangles[i].b, triangles[i].c, result);
             if (isIntersected) {
                 const newDistanceSquared = line.start.distanceToSquared(result);
                 if (distanceSquared > newDistanceSquared) {
@@ -648,6 +528,104 @@ let EventDispatcher$1 = class EventDispatcher {
         }
     }
 };
+
+class Intersection {
+    constructor() {
+        this.point = new Vector3();
+        this.normal = new Vector3();
+        this.depth = 0;
+    }
+    set(point, normal, depth) {
+        this.point.copy(point);
+        this.normal.copy(normal);
+        this.depth = depth;
+    }
+}
+
+const vec3_0 = new Vector3();
+const vec3_1 = new Vector3();
+const A = new Vector3();
+const B = new Vector3();
+const C = new Vector3();
+const V = new Vector3();
+const AB = new Vector3();
+const BC = new Vector3();
+const CA = new Vector3();
+const Q1 = new Vector3();
+const Q2 = new Vector3();
+const Q3 = new Vector3();
+const QC = new Vector3();
+const QA = new Vector3();
+const QB = new Vector3();
+const negatedNormal = new Vector3();
+// Sphere vs Triangle
+// 1. Triangle から Plane をつくる
+// 2. Sphere の中心から Plane の距離を求める
+// 3. 距離が Sphere の半径よりも大きければ、交差していないので return null
+// 4. Sphere の中心を通る、Plane からの垂線の、Plane 上の座標を求める
+// 5. その座標が Triangle の内側にあれば、交差している。return { position: 交差座標、 normal: triangle の法線、depth: 半径 - 距離 }
+// 6. 外側の場合、Triangle の3つの辺（セグメント）と、Sphere との最近距離を求める
+// 7. 最近距離が半径よりも大きければ、交差していないので return null
+// 8. 交差している場合、最も近い辺の、セグメント上の最近距離のを求める。return { position: 交差座標、 normal: 点と中心の方向ベクトル、depth: 半径 - 距離 }
+// 9. 例外は return null
+//
+// sphere: <THREE.Sphere>
+// a: <THREE.Vector3>, // vertex of a triangle
+// b: <THREE.Vector3>, // vertex of a triangle
+// c: <THREE.Vector3>, // vertex of a triangle
+// normal: <THREE.Vector3>, // normal of a triangle
+function intersectsSphereTriangle(sphere, a, b, c, normal, out) {
+    // http://realtimecollisiondetection.net/blog/?p=103
+    // vs plain of triangle face
+    A.subVectors(a, sphere.center);
+    B.subVectors(b, sphere.center);
+    C.subVectors(c, sphere.center);
+    const rr = sphere.radius * sphere.radius;
+    V.crossVectors(vec3_0.subVectors(B, A), vec3_1.subVectors(C, A));
+    const d = A.dot(V);
+    const e = V.dot(V);
+    if (d * d > rr * e) {
+        return false;
+    }
+    // vs triangle vertex
+    const aa = A.dot(A);
+    const ab = A.dot(B);
+    const ac = A.dot(C);
+    const bb = B.dot(B);
+    const bc = B.dot(C);
+    const cc = C.dot(C);
+    if ((aa > rr) && (ab > aa) && (ac > aa) ||
+        (bb > rr) && (ab > bb) && (bc > bb) ||
+        (cc > rr) && (ac > cc) && (bc > cc)) {
+        return false;
+    }
+    // vs edge
+    AB.subVectors(B, A);
+    BC.subVectors(C, B);
+    CA.subVectors(A, C);
+    const d1 = ab - aa;
+    const d2 = bc - bb;
+    const d3 = ac - cc;
+    const e1 = AB.dot(AB);
+    const e2 = BC.dot(BC);
+    const e3 = CA.dot(CA);
+    Q1.subVectors(A.multiplyScalar(e1), AB.multiplyScalar(d1));
+    Q2.subVectors(B.multiplyScalar(e2), BC.multiplyScalar(d2));
+    Q3.subVectors(C.multiplyScalar(e3), CA.multiplyScalar(d3));
+    QC.subVectors(C.multiplyScalar(e1), Q1);
+    QA.subVectors(A.multiplyScalar(e2), Q2);
+    QB.subVectors(B.multiplyScalar(e3), Q3);
+    if ((Q1.dot(Q1) > rr * e1 * e1) && (Q1.dot(QC) >= 0) ||
+        (Q2.dot(Q2) > rr * e2 * e2) && (Q2.dot(QA) >= 0) ||
+        (Q3.dot(Q3) > rr * e3 * e3) && (Q3.dot(QB) >= 0)) {
+        return false;
+    }
+    const distance = Math.sqrt(d * d / e) - sphere.radius - 1;
+    negatedNormal.set(-normal.x, -normal.y, -normal.z);
+    const contactPoint = sphere.center.clone().add(negatedNormal.multiplyScalar(distance));
+    out.set(contactPoint, normal, distance);
+    return true;
+}
 
 const FALL_VELOCITY = -20;
 const JUMP_DURATION = 1000;
@@ -841,7 +819,7 @@ class CharacterController extends EventDispatcher$1 {
             // 壁・天井は接地処理では無視
             if (triangle.normal.y <= 0)
                 continue;
-            const isIntersected = testLineTriangle(groundingHead, groundingTo, triangle.a, triangle.b, triangle.c, groundContactPointTmp);
+            const isIntersected = intersectsLineTriangle(groundingHead, groundingTo, triangle.a, triangle.b, triangle.c, groundContactPointTmp);
             if (!isIntersected)
                 continue;
             if (!groundContact) {
@@ -900,7 +878,7 @@ class CharacterController extends EventDispatcher$1 {
                 triangle.computeBoundingSphere();
             if (!sphere$1.intersectsSphere(triangle.boundingSphere))
                 continue;
-            const isIntersected = isIntersectionSphereTriangle(sphere$1, triangle.a, triangle.b, triangle.c, triangle.normal, intersection);
+            const isIntersected = intersectsSphereTriangle(sphere$1, triangle.a, triangle.b, triangle.c, triangle.normal, intersection);
             if (!isIntersected)
                 continue;
             this.contactInfo.push({
@@ -3703,11 +3681,11 @@ class TPSCameraControls extends CameraControls {
         this.colliderMeshes = [new Object3D()];
         // this._trackObject = trackObject;
         // this.offset = new Vector3( 0, 1, 0 );
-        const offset = new Vector3(0, 2, 0);
+        this.offset = new Vector3(0, 1, 0);
         this.update = (delta) => {
-            const x = trackObject.position.x + offset.x;
-            const y = trackObject.position.y + offset.y;
-            const z = trackObject.position.z + offset.z;
+            const x = trackObject.position.x + this.offset.x;
+            const y = trackObject.position.y + this.offset.y;
+            const z = trackObject.position.z + this.offset.z;
             this.moveTo(x, y, z, false);
             return super.update(delta);
         };

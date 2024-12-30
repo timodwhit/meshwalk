@@ -9,7 +9,6 @@ import {
 	Box3,
 	Spherical,
 	Raycaster,
-
 	Ray,
 	Object3D,
 } from 'three';
@@ -40,6 +39,7 @@ const _rotationMatrix = new Matrix4();
 export class TPSCameraControls extends CameraControls {
 
 	world: World;
+	offset: Vector3
 
 	constructor( camera: THREE.PerspectiveCamera, trackObject: THREE.Object3D, world: World, domElement: HTMLElement ) {
 
@@ -62,7 +62,6 @@ export class TPSCameraControls extends CameraControls {
 
 		// this._trackObject = trackObject;
 		// this.offset = new Vector3( 0, 1, 0 );
-		//JCG expose offset of camera
 		this.offset = new Vector3( 0, 1, 0 );
 
 		this.update = ( delta ) => {

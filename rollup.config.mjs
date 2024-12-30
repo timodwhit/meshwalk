@@ -4,6 +4,10 @@ import rollupTypescript from '@rollup/plugin-typescript';
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from 'typescript';
 
+const globals = {
+    'three': 'THREE'
+};
+
 const license = `/*!
  * ${ pkg.name }
  * https://github.com/${ pkg.repository }
@@ -20,12 +24,14 @@ export default {
 			file: pkg.main,
 			banner: license,
 			indent: '\t',
+			globals,
 		},
 		{
 			format: 'es',
 			file: pkg.module,
 			banner: license,
 			indent: '\t',
+			globals
 		}
 	],
 	external: [
